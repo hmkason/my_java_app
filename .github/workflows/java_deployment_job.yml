@@ -1,0 +1,21 @@
+name: CI/CD for Java App Deployment
+on:
+  push:
+    branches:
+      - main  
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Build with Maven
+      run: mvn clean package
+    - name: Trigger Jenkins deployment
+      uses: appleboy/jenkins-action@v1.1.2
+      with:
+        url: "http://<jenkins-url>"
+        user: ${{ secrets.JENKINS_USER }}  
+        token: ${{ secrets.JENKINS_TOKEN }}  
+        job: "MyJavaDeploymentJob"  
+        parameters: '{"Branch": "main"}'  
